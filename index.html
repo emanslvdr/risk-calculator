@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Risk Management Calculator</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+        @keyframes gradient-animation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .gradient-background {
+            background: linear-gradient(300deg, #c7b89b, #e6e4d9, #a6a98d);
+            background-size: 180% 180%;
+            animation: gradient-animation 18s ease infinite;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 25px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            color: #464542;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 10px;
+            background-color: #464542;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #4da14b;
+            transition: 0.3s ease;
+        }
+
+        .results {
+            margin-top: 20px;
+            background: #f9fafb;
+            padding: 15px;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body class="gradient-background">
+    <div class="container">
+        <h1>Risk Calculator</h1>
+        <label for="risk">Risk amount ($)</label>
+        <input type="number" id="risk" value="40"
+            placeholder="To risk is to rule, kings were never forged by caution." />
+
+        <label for="stoploss">Stop-Loss (%)</label>
+        <input type="number" id="stoploss" value="1" step="0.01" />
+
+        <label for="margin">Margin ($)</label>
+        <input type="number" id="margin" value="50" placeholder="How much?" />
+
+        <button onclick="calculate()">Calculate</button>
+
+        <div class="results" id="results"></div>
+    </div>
+
+    <script>
+        function calculate() {
+            const risk = parseFloat(document.getElementById('risk').value);
+            const stoploss = parseFloat(document.getElementById('stoploss').value);
+            const margin = parseFloat(document.getElementById('margin').value);
+
+            if (!risk || !stoploss || !margin || stoploss === 0 || margin === 0) {
+                document.getElementById('results').innerHTML = "<p>Please enter valid numbers.</p>";
+                return;
+            }
+
+            const positionSize = (100 * risk) / stoploss;
+            const rawLeverage = positionSize / margin;
+            const roundedLeverage = Math.round(rawLeverage);
+            const adjustedMargin = positionSize / roundedLeverage;
+
+            document.getElementById('results').innerHTML = `
+        <p><strong>Position Size:</strong> $${positionSize.toFixed(2)}</p>
+        <p><strong>Leverage (raw):</strong> ${rawLeverage.toFixed(2)}x</p>
+        <p><strong>Leverage (rounded):</strong> ${roundedLeverage}x</p>
+        <p><strong>Adjusted Margin:</strong> $${adjustedMargin.toFixed(2)}</p>
+      `;
+        }
+    </script>
+</body>
+
+</html>
